@@ -8,8 +8,7 @@ variable "vpc_cidr" {
   description = "default CIDR range of the VPC"
 }
 variable "aws_region" {
-  # default = "us-east-2"
-  default     = "eu-west-1"
+  default = "us-east-2"
   description = "aws region"
 }
 
