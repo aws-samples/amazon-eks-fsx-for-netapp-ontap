@@ -30,22 +30,18 @@ module "eks" {
 
       enable_bootstrap_user_data = true
 
-      post_bootstrap_user_data = data.template_cloudinit_config.cloudinit.rendered
+      pre_bootstrap_user_data = data.cloudinit_config.cloudinit.rendered
     }
   }
 }
 
-data "template_file" "iscsi_script" {
-  template = file("scripts/iscsi.sh")
-}
-
-data "template_cloudinit_config" "cloudinit" {
+data "cloudinit_config" "cloudinit" {
   gzip          = false
   base64_encode = false
 
   part {
     content_type = "text/x-shellscript"
-    content      = data.template_file.iscsi_script.rendered
+    content      = file("scripts/iscsi.sh")
   }
 }
 
