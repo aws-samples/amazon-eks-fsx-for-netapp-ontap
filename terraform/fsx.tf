@@ -1,6 +1,10 @@
 
 resource "random_string" "fsx_password" {
   length           = 8
+  min_lower        = 1
+  min_numeric      = 1
+  min_special      = 1
+  min_upper        = 1
   number           = true
   special          = true
   override_special = "!"
