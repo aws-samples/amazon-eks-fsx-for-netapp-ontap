@@ -1,0 +1,15 @@
+apiVersion: trident.netapp.io/v1
+kind: TridentBackendConfig
+metadata:
+  name: backend-tbc-ontap-nas
+  namespace: trident
+spec:
+  version: 1
+  storageDriverName: ontap-nas
+  backendName: tbc-ontap-nas
+  svm: ekssvm
+  aws:
+    fsxFilesystemID: fs-000fbe9665fd656bd
+  credentials:
+    name: "arn:aws:secretsmanager:us-east-2:139763910815:secret:fsxn_password_secret-ArNvsT"
+    type: awsarn
