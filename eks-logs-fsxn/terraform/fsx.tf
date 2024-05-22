@@ -5,7 +5,7 @@ resource "random_string" "fsx_password" {
   min_numeric      = 1
   min_special      = 1
   min_upper        = 1
-  numeric           = true
+  numeric          = true
   special          = true
   override_special = "!"
 }
@@ -26,8 +26,8 @@ resource "aws_fsx_ontap_file_system" "eksfs" {
 }
 
 resource "aws_fsx_ontap_storage_virtual_machine" "ekssvm" {
-  file_system_id = aws_fsx_ontap_file_system.eksfs.id
-  name           = "ekssvm"
+  file_system_id     = aws_fsx_ontap_file_system.eksfs.id
+  name               = "ekssvm"
   svm_admin_password = random_string.fsx_password.result
 }
 
@@ -58,3 +58,23 @@ resource "aws_security_group_rule" "fsx_sg_outbound" {
   type              = "egress"
   cidr_blocks       = ["0.0.0.0/0"]
 }
+
+
+resource "kubectl_manifest" "trident_backend_config" {
+  depends_on = [aws_eks_addon.fsxn_csi_addon]
+  yaml_body = templatefile("${path.module}/../manifests/backendnas.yaml.tpl",
+    {
+      fs_id      = aws_fsx_ontap_file_system.eksfs.id
+      fs_svm     = aws_fsx_ontap_storage_virtual_machine.ekssvm.name
+      secret_arn = aws_secretsmanager_secret.fsxn_password_secret.arn
+    }
+  )
+}
+
+resource "kubectl_manifest" "trident_storage_class" {
+  depends_on = [kubectl_manifest.trident_backend_config]
+  yaml_body  = file("${path.module}/../manifests/storageclass.yaml")
+}
+
+# yaml_body = 
+# 

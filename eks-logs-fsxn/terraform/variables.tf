@@ -1,5 +1,5 @@
 variable "kubernetes_version" {
-  default     = 1.27
+  default     = 1.29
   description = "kubernetes version"
 }
 
@@ -8,7 +8,8 @@ variable "vpc_cidr" {
   description = "default CIDR range of the VPC"
 }
 variable "aws_region" {
-  default = "us-east-2"
+  nullable    = true
+  default     = "eu-west-1"
   description = "aws region"
 }
 
@@ -23,6 +24,6 @@ variable "fsx_admin_password" {
 }
 
 variable "fsxn_addon_version" {
-  default = "v24.2.0-eksbuild.1"
+  default     = "v24.2.0-eksbuild.1"
   description = "fsx csi addon version"
 }

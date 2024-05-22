@@ -7,9 +7,9 @@ spec:
   version: 1
   storageDriverName: ontap-nas
   backendName: tbc-ontap-nas
-  svm: ekssvm
+  svm: ${fs_svm}
   aws:
-    fsxFilesystemID: fs-000fbe9665fd656bd
+    fsxFilesystemID: ${fs_id}
   credentials:
-    name: "arn:aws:secretsmanager:us-east-2:139763910815:secret:fsxn_password_secret-ArNvsT"
+    name: ${secret_arn}
     type: awsarn

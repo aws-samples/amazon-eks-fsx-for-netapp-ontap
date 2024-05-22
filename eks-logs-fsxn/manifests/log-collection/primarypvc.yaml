@@ -10,5 +10,5 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi
+      storage: 5Gi # can be of any size, but to keep cost low, we are using 5GB 
   storageClassName: trident-csi-nas

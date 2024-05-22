@@ -3,10 +3,19 @@ fluentbit:
   input:
     tail:
       enable: true
-      path: "/logs/*/*.log"
+      path: "/var/log/*/*/*.log"
   output:
-      stdout: 
-        enable: true
+    stdout: 
+      enable: true
+  filter:
+    kubernetes:
+      enable: false
+      labels: true
+      annotations: true
+    containerd:
+      enable: false
+    systemd:
+      enable: false
       
   additionalVolumes: 
     - name: shared-logs
@@ -14,6 +23,6 @@ fluentbit:
         claimName: shared-pv
   additionalVolumesMounts: 
     - name: shared-logs
-      mountPath: /logs
+      mountPath: /var/log
       readOnly: false
-      subPathExpr: $(NODE_NAME)
+      # subPathExpr: $(NODE_NAME)

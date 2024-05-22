@@ -5,11 +5,11 @@ module "eks" {
   cluster_version = var.kubernetes_version
   subnet_ids      = module.vpc.private_subnets
 
-  enable_irsa = true
+  enable_irsa                    = true
   cluster_endpoint_public_access = true
 
-  authentication_mode = "API"
-  enable_cluster_creator_admin_permissions = true 
+  authentication_mode                      = "API"
+  enable_cluster_creator_admin_permissions = true
 
   tags = {
     Environment = "training"
@@ -58,13 +58,47 @@ data "aws_eks_cluster_auth" "eks" {
 }
 
 resource "aws_eks_addon" "fsxn_csi_addon" {
-  cluster_name = module.eks.cluster_name
-  addon_name   = "netapp_trident-operator"
-  addon_version = var.fsxn_addon_version
+  cluster_name                = module.eks.cluster_name
+  addon_name                  = "netapp_trident-operator"
+  addon_version               = var.fsxn_addon_version
   resolve_conflicts_on_create = "OVERWRITE"
 
 
   configuration_values = jsonencode({
     cloudIdentity = "'eks.amazonaws.com/role-arn: ${module.iam_iam-role-for-service-accounts-eks.iam_role_arn}'"
   })
+}
+
+# arn:aws:iam::aws:policy/CloudWatchFullAccess
+#fluent/ fluent-bit 
+
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["pods.eks.amazonaws.com"]
+    }
+
+    actions = [
+      "sts:AssumeRole",
+      "sts:TagSession"
+    ]
+  }
+}
+resource "aws_iam_role" "fluent_bit_cw_access_role" {
+  name               = "FluentBitCWAccessRole"
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
+}
+
+resource "aws_iam_role_policy_attachment" "fluent_bit_cw_access_role_attachement" {
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchFullAccess"
+  role       = aws_iam_role.fluent_bit_cw_access_role.name
+}
+resource "aws_eks_pod_identity_association" "example" {
+  cluster_name    = module.eks.cluster_name
+  namespace       = "fluent"
+  service_account = "fluent-bit"
+  role_arn        = aws_iam_role.fluent_bit_cw_access_role.arn
 }

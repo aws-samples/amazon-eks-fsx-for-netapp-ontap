@@ -15,6 +15,9 @@ output "fsx-ontap-id" {
 output "fsx-svm-name" {
   value = aws_fsx_ontap_storage_virtual_machine.ekssvm.name
 }
+output "fsx-svm-id" {
+  value = aws_fsx_ontap_storage_virtual_machine.ekssvm.id
+}
 
 output "secret_arn" {
   value = aws_secretsmanager_secret.fsxn_password_secret.arn

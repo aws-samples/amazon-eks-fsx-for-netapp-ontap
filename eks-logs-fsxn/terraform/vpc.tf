@@ -1,4 +1,4 @@
-
+data "aws_region" "current" {}
 provider "aws" {
   region = var.aws_region
 }
