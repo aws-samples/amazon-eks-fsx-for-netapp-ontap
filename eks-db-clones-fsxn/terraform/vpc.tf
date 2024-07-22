@@ -16,7 +16,7 @@ resource "random_string" "suffix" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.64.0"
+  version = "5.5.2"
 
   name                 = "fsx-eks-vpc"
   cidr                 = var.vpc_cidr
