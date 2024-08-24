@@ -1,12 +1,26 @@
 data "aws_region" "current" {}
 provider "aws" {
   region = var.aws_region
+  default_tags {
+    tags = local.tags
+  }
 }
 
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  filter {
+    name   = "group-name"
+    values = [var.aws_region]
+  }
+}
 
 locals {
   cluster_name = "fsx-eks-${random_string.suffix.result}"
+  tags = {
+    project = "amazon-eks-fsx-for-netapp-ontap"
+    owner   = "aws"
+  }
 }
 
 resource "random_string" "suffix" {
