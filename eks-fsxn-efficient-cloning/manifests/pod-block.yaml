@@ -1,0 +1,18 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-fsx-block
+spec:
+  volumes:
+    - name: mysql-volume-pv-storage
+      persistentVolumeClaim:
+       claimName: mysql-volume
+  containers:
+    - name: pod-fsx-block-container
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/mnt"
+          name: mysql-volume-pv-storage
