@@ -1,12 +1,26 @@
 
 provider "aws" {
   region = var.aws_region
+  default_tags {
+    tags = local.tags
+  }
 }
 
-data "aws_availability_zones" "available" {}
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  filter {
+    name   = "group-name"
+    values = [var.aws_region]
+  }
+}
 
 locals {
   cluster_name = "fsx-eks-${random_string.suffix.result}"
+  tags = {
+    project = "amazon-eks-fsx-for-netapp-ontap"
+    owner   = "aws"
+  }
 }
 
 resource "random_string" "suffix" {
@@ -16,7 +30,7 @@ resource "random_string" "suffix" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.64.0"
+  version = "5.5.2"
 
   name                 = "fsx-eks-vpc"
   cidr                 = var.vpc_cidr

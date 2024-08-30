@@ -15,7 +15,7 @@ This repo comes as an appendix to the the "Manage your containerised stateful ap
 
 ## Security
 
-See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
+See [CONTRIBUTING](../CONTRIBUTING.md#security-issue-notifications) for more information.
 
 ## License
 

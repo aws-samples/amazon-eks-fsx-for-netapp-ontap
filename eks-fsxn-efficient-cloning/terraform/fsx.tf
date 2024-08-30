@@ -5,7 +5,7 @@ resource "random_string" "fsx_password" {
   min_numeric      = 1
   min_special      = 1
   min_upper        = 1
-  number           = true
+  numeric          = true
   special          = true
   override_special = "!"
 }
@@ -28,6 +28,7 @@ resource "aws_fsx_ontap_file_system" "eksfs" {
 resource "aws_fsx_ontap_storage_virtual_machine" "ekssvm" {
   file_system_id = aws_fsx_ontap_file_system.eksfs.id
   name           = "ekssvm"
+  svm_admin_password = random_string.fsx_password.result
 }
 
 resource "aws_security_group" "fsx_sg" {

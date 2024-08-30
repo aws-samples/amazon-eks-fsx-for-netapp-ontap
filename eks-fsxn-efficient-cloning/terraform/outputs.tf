@@ -38,7 +38,7 @@ output "fsx-svm-id" {
 
 output "zz_update_kubeconfig_command" {
   # value = "aws eks update-kubeconfig --name " + module.eks.cluster_id
-  value = format("%s %s %s %s", "aws eks update-kubeconfig --name", module.eks.cluster_id, "--region", var.aws_region)
+  value = format("%s %s %s %s", "aws eks update-kubeconfig --name", module.eks.cluster_name, "--region", var.aws_region)
 }
 
 output "zz_non_root_volumes_env" {

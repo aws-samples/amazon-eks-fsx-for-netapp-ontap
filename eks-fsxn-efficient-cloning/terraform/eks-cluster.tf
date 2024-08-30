@@ -1,17 +1,15 @@
 module "eks" {
   source          = "terraform-aws-modules/eks/aws"
-  version         = "18.0.6"
+  version         = "20.5.0"
   cluster_name    = local.cluster_name
   cluster_version = var.kubernetes_version
   subnet_ids      = module.vpc.private_subnets
 
   enable_irsa = true
+  cluster_endpoint_public_access = true
 
-  tags = {
-    Environment = "training"
-    GithubRepo  = "terraform-aws-eks"
-    GithubOrg   = "terraform-aws-modules"
-  }
+  authentication_mode                      = "API"
+  enable_cluster_creator_admin_permissions = true
 
   vpc_id = module.vpc.vpc_id
 
@@ -43,12 +41,4 @@ data "cloudinit_config" "cloudinit" {
     content_type = "text/x-shellscript"
     content      = file("scripts/iscsi.sh")
   }
-}
-
-data "aws_eks_cluster" "eks" {
-  name = module.eks.cluster_id
-}
-
-data "aws_eks_cluster_auth" "eks" {
-  name = module.eks.cluster_id
 }
